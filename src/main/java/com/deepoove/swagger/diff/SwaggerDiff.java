@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.deepoove.swagger.diff.compare.SpecificationDiff;
 import com.deepoove.swagger.diff.model.ChangedEndpoint;
+import com.deepoove.swagger.diff.model.ChangedExtensionGroup;
 import com.deepoove.swagger.diff.model.Endpoint;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -29,6 +30,8 @@ public class SwaggerDiff {
     private List<Endpoint> missingEndpoints;
     private List<ChangedEndpoint> changedEndpoints;
 
+    private ChangedExtensionGroup changedVendorExtensions;
+
     /**
      * compare two swagger 1.x doc
      * 
@@ -38,7 +41,11 @@ public class SwaggerDiff {
      *            new api-doc location:Json or Http
      */
     public static SwaggerDiff compareV1(String oldSpec, String newSpec) {
-        return compare(oldSpec, newSpec, null, null);
+        return compareV1(oldSpec, newSpec, false);
+    }
+
+    public static SwaggerDiff compareV1(String oldSpec, String newSpec, boolean withExtensions) {
+        return compare(oldSpec, newSpec, null, null, withExtensions);
     }
 
     /**
@@ -50,7 +57,11 @@ public class SwaggerDiff {
      *            new api-doc location:Json or Http
      */
     public static SwaggerDiff compareV2(String oldSpec, String newSpec) {
-        return compare(oldSpec, newSpec, null, SWAGGER_VERSION_V2);
+        return compareV2(oldSpec, newSpec, false);
+    }
+
+    public static SwaggerDiff compareV2(String oldSpec, String newSpec, boolean withExtensions) {
+        return compare(oldSpec, newSpec, null, SWAGGER_VERSION_V2, withExtensions);
     }
 
     /**
@@ -62,12 +73,16 @@ public class SwaggerDiff {
      *            new Swagger specification document in v2.0 format as a JsonNode
      */
     public static SwaggerDiff compareV2(JsonNode oldSpec, JsonNode newSpec) {
-        return new SwaggerDiff(oldSpec, newSpec).compare();
+        return compareV2(oldSpec, newSpec, false);
+    }
+
+    public static SwaggerDiff compareV2(JsonNode oldSpec, JsonNode newSpec, boolean withExtensions) {
+        return new SwaggerDiff(oldSpec, newSpec).compare(withExtensions);
     }
 
     public static SwaggerDiff compare(String oldSpec, String newSpec,
-            List<AuthorizationValue> auths, String version) {
-        return new SwaggerDiff(oldSpec, newSpec, auths, version).compare();
+            List<AuthorizationValue> auths, String version, boolean withExtensions) {
+        return new SwaggerDiff(oldSpec, newSpec, auths, version).compare(withExtensions);
     }
 
     /**
@@ -104,11 +119,12 @@ public class SwaggerDiff {
             "cannot read api-doc from spec."); }
     }
 
-    private SwaggerDiff compare() {
-    	SpecificationDiff diff = SpecificationDiff.diff(oldSpecSwagger, newSpecSwagger);
+    private SwaggerDiff compare(boolean withExtensions) {
+    	SpecificationDiff diff = SpecificationDiff.diff(oldSpecSwagger, newSpecSwagger, withExtensions);
         this.newEndpoints = diff.getNewEndpoints();
         this.missingEndpoints = diff.getMissingEndpoints();
         this.changedEndpoints = diff.getChangedEndpoints();
+        this.changedVendorExtensions = diff;
         return this;
     }
 
@@ -122,6 +138,10 @@ public class SwaggerDiff {
 
     public List<ChangedEndpoint> getChangedEndpoints() {
         return changedEndpoints;
+    }
+
+    public ChangedExtensionGroup getChangedVendorExtensions() {
+        return changedVendorExtensions;
     }
 
     public String getOldVersion() {
