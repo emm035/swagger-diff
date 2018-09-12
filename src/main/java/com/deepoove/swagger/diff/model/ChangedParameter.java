@@ -5,7 +5,7 @@ import java.util.List;
 
 import io.swagger.models.parameters.Parameter;
 
-public class ChangedParameter extends ChangedExtensionGroup implements Changed {
+public class ChangedParameter implements Changed {
 	
 	private List<ElProperty> increased = new ArrayList<ElProperty>();
 	private List<ElProperty> missing = new ArrayList<ElProperty>();;
@@ -50,7 +50,7 @@ public class ChangedParameter extends ChangedExtensionGroup implements Changed {
 	}
 
 	public boolean isDiff() {
-		return isChangeRequired || isChangeDescription || !increased.isEmpty() || !missing.isEmpty() || vendorExtensionsAreDiff();
+		return isChangeRequired || isChangeDescription || !increased.isEmpty() || !missing.isEmpty();
 	}
 
 	public List<ElProperty> getIncreased() {

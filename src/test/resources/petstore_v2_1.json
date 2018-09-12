@@ -1,7 +1,5 @@
 {
   "swagger": "2.0",
-  "x-remove-root-ext": "remove me!",
-  "x-change-root-ext": "change me!",
   "info": {
     "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
     "version": "1.0.0",
@@ -13,9 +11,7 @@
     "license": {
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-    },
-    "x-remove-info-ext": "remove me!",
-    "x-change-info-ext": "change me!"
+    }
   },
   "host": "petstore.swagger.io",
   "basePath": "/v2",
@@ -26,9 +22,7 @@
       "externalDocs": {
         "description": "Find out more",
         "url": "http://swagger.io"
-      },
-      "x-remove-tags-ext": "remove me!",
-      "x-change-tags-ext": "change me!"
+      }
     },
     {
       "name": "store",
@@ -48,11 +42,7 @@
   ],
   "paths": {
     "/pet": {
-      "x-remove-path-ext": "remove me!",
-      "x-change-path-ext": "change me!",
       "post": {
-        "x-remove-method-ext": "remove me!",
-        "x-change-method-ext": "change me!",
         "tags": [
           "pet"
         ],
@@ -75,16 +65,12 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/Pet"
-            },
-            "x-remove-param-ext": "remove me!",
-            "x-change-param-ext": "change me!"
+            }
           }
         ],
         "responses": {
           "405": {
-            "description": "Invalid input",
-            "x-remove-response-ext": "remove me!",
-            "x-change-response-ext": "change me!"
+            "description": "Invalid input"
           }
         },
         "security": [
@@ -816,8 +802,6 @@
   },
   "securityDefinitions": {
     "petstore_auth": {
-      "x-remove-security-ext": "remove me!",
-      "x-change-security-ext": "change me!",
       "type": "oauth2",
       "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
       "flow": "implicit",

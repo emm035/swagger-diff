@@ -10,15 +10,11 @@ import org.junit.Test;
 
 import com.deepoove.swagger.diff.SwaggerDiff;
 import com.deepoove.swagger.diff.model.ChangedEndpoint;
-import com.deepoove.swagger.diff.model.ChangedOperation;
-import com.deepoove.swagger.diff.model.ChangedExtensionGroup;
 import com.deepoove.swagger.diff.model.Endpoint;
 import com.deepoove.swagger.diff.output.HtmlRender;
 import com.deepoove.swagger.diff.output.MarkdownRender;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.swagger.models.HttpMethod;
 
 public class SwaggerDiffTest {
 
@@ -29,13 +25,13 @@ public class SwaggerDiffTest {
 
 	@Test
 	public void testEqual() {
-		SwaggerDiff diff = SwaggerDiff.compareV2(SWAGGER_V2_DOC2, SWAGGER_V2_DOC2, true);
+		SwaggerDiff diff = SwaggerDiff.compareV2(SWAGGER_V2_DOC2, SWAGGER_V2_DOC2);
 		assertEqual(diff);
 	}
 
 	@Test
 	public void testNewApi() {
-		SwaggerDiff diff = SwaggerDiff.compareV2(SWAGGER_V2_EMPTY_DOC, SWAGGER_V2_DOC2, true);
+		SwaggerDiff diff = SwaggerDiff.compareV2(SWAGGER_V2_EMPTY_DOC, SWAGGER_V2_DOC2);
 		List<Endpoint> newEndpoints = diff.getNewEndpoints();
 		List<Endpoint> missingEndpoints = diff.getMissingEndpoints();
 		List<ChangedEndpoint> changedEndPoints = diff.getChangedEndpoints();
@@ -60,7 +56,7 @@ public class SwaggerDiffTest {
 
 	@Test
 	public void testDeprecatedApi() {
-		SwaggerDiff diff = SwaggerDiff.compareV2(SWAGGER_V2_DOC1, SWAGGER_V2_EMPTY_DOC, true);
+		SwaggerDiff diff = SwaggerDiff.compareV2(SWAGGER_V2_DOC1, SWAGGER_V2_EMPTY_DOC);
 		List<Endpoint> newEndpoints = diff.getNewEndpoints();
 		List<Endpoint> missingEndpoints = diff.getMissingEndpoints();
 		List<ChangedEndpoint> changedEndPoints = diff.getChangedEndpoints();
@@ -82,17 +78,13 @@ public class SwaggerDiffTest {
 		Assert.assertTrue(changedEndPoints.isEmpty());
 
 	}
-
-	private void assertVendorExtensionsAreDiff(ChangedExtensionGroup vendorExtensions) {
-		Assert.assertTrue(vendorExtensions.vendorExtensionsAreDiff());
-	}
 	
 	@Test
 	public void testDiff() {
-		SwaggerDiff diff = SwaggerDiff.compareV2(SWAGGER_V2_DOC1, SWAGGER_V2_DOC2, true);
+		SwaggerDiff diff = SwaggerDiff.compareV2(SWAGGER_V2_DOC1, SWAGGER_V2_DOC2);
 		List<ChangedEndpoint> changedEndPoints = diff.getChangedEndpoints();
 		String html = new HtmlRender("Changelog",
-				"src/main/resources/demo.css")
+				"http://deepoove.com/swagger-diff/stylesheets/demo.css")
 				.render(diff);
 		
 		try {
@@ -104,28 +96,13 @@ public class SwaggerDiffTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		ChangedExtensionGroup tlVendorExts = diff.getChangedVendorExtensions();
-		assertVendorExtensionsAreDiff(tlVendorExts);
-		for (String key : tlVendorExts.getChangedSubGroups().keySet()) {
-			assertVendorExtensionsAreDiff(tlVendorExts.getChangedSubGroups().get(key));
-		}
-
-		List<ChangedEndpoint> changedEndpoints = diff.getChangedEndpoints();
-		for (ChangedEndpoint changedEndpoint : changedEndpoints) {
-			if (changedEndpoint.getPathUrl().equals("/pet")) {
-				assertVendorExtensionsAreDiff(changedEndpoint);
-
-				ChangedOperation changedOperation = changedEndpoint.getChangedOperations().get(HttpMethod.POST);
-				assertVendorExtensionsAreDiff(changedOperation);
-			}
-		}
-//		Assert.assertFalse(changedEndPoints.isEmpty());
+		Assert.assertFalse(changedEndPoints.isEmpty());
+		
 	}
 	
 	@Test
 	public void testDiffAndMarkdown() {
-		SwaggerDiff diff = SwaggerDiff.compareV2(SWAGGER_V2_DOC1, SWAGGER_V2_DOC2, true);
+		SwaggerDiff diff = SwaggerDiff.compareV2(SWAGGER_V2_DOC1, SWAGGER_V2_DOC2);
 		String render = new MarkdownRender().render(diff);
 		try {
 			FileWriter fw = new FileWriter(
@@ -144,7 +121,7 @@ public class SwaggerDiffTest {
 		try {
 			InputStream inputStream = getClass().getClassLoader().getResourceAsStream(SWAGGER_V2_DOC1);
 			JsonNode json = new ObjectMapper().readTree(inputStream);
-			SwaggerDiff diff = SwaggerDiff.compareV2(json, json, true);
+			SwaggerDiff diff = SwaggerDiff.compareV2(json, json);
 			assertEqual(diff);
 		} catch (IOException e) {
 			e.printStackTrace();
