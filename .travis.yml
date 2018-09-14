@@ -1,6 +1,15 @@
 language: java
 script: mvn clean install
-
 after_success:
-  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report
-
+- mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report
+before_deploy:
+- mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
+- export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep
+  -v '\[')
+deploy:
+  provider: releases
+  api_key:
+    secure: QwPr744Xr86QD7Nr+MyGXj6d+X2Uz1i4kIEdND248WUyo7tklQdPGQjQOpy+shG8ERyJ3g5M61Sucz8aUfnmD/B4krvqBFP3LQ2QetaK5exHqsYNdBTVC56YZQJXuf2PT/KjUGMNNDWs0OnIAplUzq1VhjV5EpvV6JCtOXrJVQVVOTyBTIbBBVKrTlja0XttylNApiJ3MfZYMhpvbPisATvBFfG2A8coAq/Y+Mz1VbMulpP2yeBgX7szQ4z2WdCK7wugiMIZGXCLEQHAuOEu9WbICphcfM7vHYzTjEZvQ1WrN2VpasUpCucoBSpoSwbhD3OgymHucOB69Q48MUuEbI0r4cJYLSml7DQLFUiqlLEJUqv8LD3TRlr1+DpJI96V+TZDFcmbkuc7cdsnNoINVh3g9qkongzgajsTfVKr0HFDmoTmUUQPuPoerH8dspQ7sGkLLRSGnHTfC4/t/gKhEpiOjL29UuYwPfeBO560VPEH3NMNIGe2r/m/2cZ9E+dFj/+wyN9biCniPxPjh/KhpxFvB7w45P1Ln1nv8B5FQVvFbG2HTtH/zhbdT9Rlf6RzeMopRF5MdD99Wh2R9mGaNOSka8liDbkgs30SQ7v+7X7G62P1ceFyS9z1rTernsyGf37ojmynPldra75+KsIAuA9zVoPbEW43TuYYiI/QaKE=
+  file: target/swagger-diff-$project_version.jar
+  on:
+    repo: emm035/swagger-diff
