@@ -11,3 +11,4 @@ deploy:
   file: target/swagger-diff-$project_version.jar
   on:
     repo: emm035/swagger-diff
+    branch: travis-publishing
