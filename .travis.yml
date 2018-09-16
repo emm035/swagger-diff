@@ -12,3 +12,4 @@ deploy:
   on:
     repo: emm035/swagger-diff
     branch: travis-publishing
+  name: $project_version
