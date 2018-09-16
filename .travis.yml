@@ -9,6 +9,7 @@ deploy:
   api_key:
     secure: fEn2bNENXNadDFTeuvmtWcXmOihGBIpql2Y2ZiRlElUSqsf8F6c+kScjok2qtOfAT+P3sm6E8jjlo8h/EMJaoTPEw5ZGsu1I+58APvp8HOB8Iw38NQK6tRxz4ItH/Ye9bxC0/kud7j/Ctob5nQyx/7hZPjut05Re2ybsM+Tc8x0l1V94L/sNT0OCzGsrOhmTxzeLAmVB5rNpbBoi/d+97jGIGzKeuRnIFJ2pIN0E/ZGJFQU+MAkxsqb7rkwtd3apB70yCn4a7E6auvc6GQF3RWo0NY+WuYUDSlq9oGH+esezjrnMxgFwqwAt+Wj9hhcKgstLJcBYBOLxb84fY3GV7JdQzvQiLOjgGquJZ7OxdTlkR5nrfkO+3YFHzJfg8nPAycgd8v8JXP0y9MLr4EuA/DaEK7N+UtksoPFo7dqKCKm4gZWI7YfKL0KNiqZE2QuoNEJFHZ1c899H9QONXfkULmwzL8veBQL4gU6XmoUbnS7L69sIsNvwVaIJf9Mwkv9r80D1dQHzyRzbzXcGbdV8lw+vSdfCmMVfcdxFUSLQzsg4oPwc4dF1Edoi9xBEi622UNNRcLR+7egFiMcUkEN/1ovf5rf6xmnwyLHGpb1uZEExOi5di+lH3YHhKg6eMgF8TANx2bYf1So741r6VCwoXj+07F0cpUJpYdl462I0soM=
   file: target/swagger-diff-1.0-SNAPSHOT.jar
+  skip_cleanup: true
   on:
     repo: emm035/swagger-diff
     branch: travis-publishing
