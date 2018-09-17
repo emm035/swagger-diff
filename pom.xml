@@ -10,11 +10,11 @@
 
 	<groupId>io.github.emm035</groupId>
 	<artifactId>swagger-diff</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>swagger-diff</name>
-	<description>diff swagger api document</description>
+	<description>diff swagger api documents</description>
 	<url>http://maven.apache.org</url>
 
 	<licenses>
@@ -26,17 +26,15 @@
 
 	<developers>
 		<developer>
-			<name>Sayi</name>
-			<email>adasai90@gmail.com</email>
+			<name>Eric</name>
+			<email>ericmarshall715@gmail.com</email>
 		</developer>
 	</developers>
 
-
-
 	<scm>
-		<connection>scm:git:git@github.com:Sayi/swagger-diff.git</connection>
-		<developerConnection>scm:git:git@github.com:Sayi/swagger-diff.git</developerConnection>
-		<url>git@github.com:Sayi/swagger-diff.git</url>
+		<connection>scm:git:git@github.com:emm035/swagger-diff.git</connection>
+		<developerConnection>scm:git:git@github.com:emm035/swagger-diff.git</developerConnection>
+		<url>git@github.com:emm035/swagger-diff.git</url>
 	</scm>
 
 	<properties>
