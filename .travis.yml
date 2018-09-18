@@ -1,22 +1,26 @@
 language: java
 script: mvn clean install
 before_deploy:
+- gpg --import gpg.asc
 - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
-- export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
+- export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep
+  -v '\[')
 - git tag -f $project_version
 deploy:
   provider: releases
   api_key:
     secure: fEn2bNENXNadDFTeuvmtWcXmOihGBIpql2Y2ZiRlElUSqsf8F6c+kScjok2qtOfAT+P3sm6E8jjlo8h/EMJaoTPEw5ZGsu1I+58APvp8HOB8Iw38NQK6tRxz4ItH/Ye9bxC0/kud7j/Ctob5nQyx/7hZPjut05Re2ybsM+Tc8x0l1V94L/sNT0OCzGsrOhmTxzeLAmVB5rNpbBoi/d+97jGIGzKeuRnIFJ2pIN0E/ZGJFQU+MAkxsqb7rkwtd3apB70yCn4a7E6auvc6GQF3RWo0NY+WuYUDSlq9oGH+esezjrnMxgFwqwAt+Wj9hhcKgstLJcBYBOLxb84fY3GV7JdQzvQiLOjgGquJZ7OxdTlkR5nrfkO+3YFHzJfg8nPAycgd8v8JXP0y9MLr4EuA/DaEK7N+UtksoPFo7dqKCKm4gZWI7YfKL0KNiqZE2QuoNEJFHZ1c899H9QONXfkULmwzL8veBQL4gU6XmoUbnS7L69sIsNvwVaIJf9Mwkv9r80D1dQHzyRzbzXcGbdV8lw+vSdfCmMVfcdxFUSLQzsg4oPwc4dF1Edoi9xBEi622UNNRcLR+7egFiMcUkEN/1ovf5rf6xmnwyLHGpb1uZEExOi5di+lH3YHhKg6eMgF8TANx2bYf1So741r6VCwoXj+07F0cpUJpYdl462I0soM=
-  file: target/swagger-diff-1.0-SNAPSHOT.jar
+  file: target/swagger-diff-$project_version.jar
   skip_cleanup: true
   on:
     repo: emm035/swagger-diff
     branch: travis-publishing
   name: "$project_version"
 after_deploy:
-- mvn deploy --settings .travis.settings.xml -DskipTests=true -B
+- mvn deploy gpg:sign --settings .travis.settings.xml -DskipTests=true -B
 env:
   global:
-  - secure: WOTVYnvu4JCrpxDv9EcHBbzfaCIHG41quTJRQePkAhSgh8IVk/z4lrqiSKHEZ7N+M4v6xZCeE1YgsDLSciSYJOE1huS3hQGZO00WnWpNXdg4tB2YbWHmWVOOxmmnMo9rhBV+YS3EZRWb2oSM+jDyCLY/rMBna0Zx6shu5/aRWppHBq7mKmHlX7Bfrpw+1mqAR+wiqCwG1D/W5/od/GtMVBhvDLBbdp8O7zrpbFqNrjVMN28ked294gOHQ2NPSG2Vyxu5K40SKB6dx1+bvlLPw7LD4nM56jMZdQ/ZsP++86W7D/wqMBzwQkkQnLY+5p9/IyB0bwZZ4KrNfGsIdEMGuRANSopWpTCMzeprV3ydc4qkxJzddpz44mftjX6l8PX9IxQgkey5fwi6C64IZGBlinizfiOKhoj5mXUbZX5dX7EEut53GzAI8TjfNycpSXjTB4/8LWXw48cNm9runJWf7XKd5qWDg+Uv7at/mKN/Hn/9XYs4tYNxfrlF7ujOaOjDOkQys2fHii+n17z+cgu6I1p/cFW1kZ7JYcSIjzUxQRB0NY10lJsdtcmHcmNZlvvk0V4tamo4ZA+/xgLHD16IeJnRBHq2tMiby5fLcSzfR1rnbmJ2MOc9WjaumN3uTuG6snu73axHFEggtI7UP/iIuW4dClZjteRsffPFWpZpKJk=
-  - secure: cDriMLs60fXZCwyaJsyme6NGLxQbbLzQRG8dktrWY9IEpZNPSgnonwIBx6OdgZ1gqVAB3q28eKm6BylmTr/KhbqY2sQfoeNHnnRS4E6ybRp/UtaFufjTa4kiHID68KkD9aWCMsUCsNrINE/HwMOPahhgRBcKTFP23sad1oBywKDiVGuf8iLIaBwLu09Z7WIA1Tn8jUlVrxDMygDlrEcPKBGLIwcVwSSYuooLmV0HJRuDkrmcak25kwWwJaB1AdmVThuRZ0xObDJ0IZkmZh/pSmatpTiyQRVb0X15yUgII4jtQWY9CaORjtphCDxvnCIl4Ah9rN1hzHOvLvX3Timk2P+VPdwU8CubOFW0amAAV9eM5GIno7/mV1l67vFieNHy8GfDu5op0tWUl8XxVE1Xi5VMhhOY/WixOkJNQ2Ok9lMeKfHDtsTLjbr2phKnxtJaHcS1997WMNuEfUEhtj9yYT2ZTN/FIDpEvFYQGYfemjP5OiUUfHqNDXh6moEtQv/nWnoL+s/dknEPpq2kexzQnLDRCHBERWicSgZnfw9iMfnwicURofRrZG9tDXz6ZUEKhrhcfXm0QnrqE4cpsjfMFnXjTM8JWikiN+HLovFKNfGGhrSAFWO0SMu0mRRTz9emgoCRlYUXB/s0RoFuVwUW1he5NG/9jw9SlFGYFWgY/kQ=
+    secure: Qtvmq5PDLH7rKWIKt4aVIV85ZKcG264jTeMjvW7t6sJUqZ1u5ySxcKiBn+8BQ8BYqNvJgdWjiBwSunyeewV2L81od86bDK7dobVYu4HCwukdJSdxsPW4+D2v0KGXmfH1i2qiNNJ/Uk4Beqq4gJtVISpVIMs3ydJnPoeLuT1V/geAj2B5SOUrW1RDlrNqQvyaS9i4PTkkt5Mjhxpi2Uxml2K1XkO6vi5lNNIJRiHnlMoa4U6su6O6fm5oWhCs0fFke8C1KGr1oFn0ogCxBNBWPgppsc+gjFGFd2EdglmdnMp73C1N359Xk21rcq5INEYkdMC6grpsnLCmzUQct42eZ85L3eN761QOc1qU6R+hGxTckILy1fyFaHD0IBNbwSebJcKys3T1+W5Dy8qay6azKFLI6A2i+dt2pLrXzuoh/E+NkwxVcxkJOl+09DRvX3tyJVOxh+ix2d5qxz6wWaZkSaEjxkpRmKS+016i2NhPSUt5r6ds+kevAaZpJnBRlw+PCnuFlURUXBq03DgYhs4+URYPnkIpSTgeZOcliHFhSbvEXRMC0E+HnGhFX6u3xIQzMEYLODg++eKgxp4XZzo2RGals1tldmkaX0oWy0gNJHu+ng97FRFcTr/Z9VVYUGHmz7NHRE/uE7F+IIV18KgFCGiOsha82SytopcXxEID5eY=
+before_install:
+- openssl aes-256-cbc -K $encrypted_7bd4377d7160_key -iv $encrypted_7bd4377d7160_iv
+  -in gpg.asc.enc -out gpg.asc -d
